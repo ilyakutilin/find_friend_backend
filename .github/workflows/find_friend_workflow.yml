@@ -112,6 +112,5 @@ jobs:
               cd /opt/findfriend/build/infra/prod/
               docker-compose -f ./docker-compose.prod.yaml config --quiet && exit 1
               docker compose -f ./docker-compose.prod.yaml up -d --build --force-recreate
-              docker exec prod-backend-1 python manage.py makemigrations
               docker exec prod-backend-1 python manage.py migrate
               docker exec prod-backend-1 python manage.py collectstatic --no-input
