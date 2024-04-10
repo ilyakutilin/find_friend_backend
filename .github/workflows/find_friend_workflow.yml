@@ -29,6 +29,10 @@ jobs:
       run: |
         cd src/
         python -m flake8
+    
+    - name: Test with pytest
+      run: |
+        python -m pytest
 
   # Создаем архив проекта и копируем его на сервер
   copy_project_on_server:
