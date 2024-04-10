@@ -235,8 +235,8 @@ if DEBUG:
     DEFAULT_FROM_EMAIL = "local@example.com"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.yandex.ru"
-    EMAIL_PORT = 465
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True
 

@@ -8,6 +8,7 @@ services:
       - '6379:6379'
     networks:
       - app_net
+    restart: always
 
   backend:
     build: ../../.
@@ -59,6 +60,7 @@ services:
       - asgiserver
     networks:
       - app_net
+    restart: always
 
 networks:
   app_net:

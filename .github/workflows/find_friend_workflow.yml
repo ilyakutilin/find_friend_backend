@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.11
+        python-version: 3.12
 
     - name: Install dependencies
       run: |
@@ -29,6 +29,10 @@ jobs:
       run: |
         cd src/
         python -m flake8
+
+    - name: Test with pytest
+      run: |
+        python -m pytest
 
   # Создаем архив проекта и копируем его на сервер
   copy_project_on_server:
@@ -50,7 +54,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "deploy.tar"
-        target: "/home/${{ secrets.USER }}/"
+        target: "/opt/findfriend/"
 
   # Распаковываем архив и через docker-compose собираем
   # и запускаем контейнер с бэкендом
@@ -78,7 +82,7 @@ jobs:
           # Удаляем все имеющиеся на сервере docker-образы.
           # Запускаем docker-compose в фоновом режиме.
           script: |
-            cd /home/${{ secrets.USER }}/
+            cd /opt/findfriend/
             tar -xvf deploy.tar
             rm deploy.tar
             cd build/
@@ -96,6 +100,8 @@ jobs:
             echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> .env
             echo EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }} >> .env
             echo EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }} >> .env
+            echo EMAIL_HOST=${{ secrets.EMAIL_HOST }} >> .env
+            echo EMAIL_PORT=${{ secrets.EMAIL_PORT }} >> .env
       - name: Run container
         uses: appleboy/ssh-action@master
         with:
@@ -103,9 +109,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-              cd /home/${{ secrets.USER }}/build/infra/prod/
+              cd /opt/findfriend/build/infra/prod/
               docker-compose -f ./docker-compose.prod.yaml config --quiet && exit 1
               docker compose -f ./docker-compose.prod.yaml up -d --build --force-recreate
-              docker exec prod-backend-1 python manage.py makemigrations
               docker exec prod-backend-1 python manage.py migrate
               docker exec prod-backend-1 python manage.py collectstatic --no-input
