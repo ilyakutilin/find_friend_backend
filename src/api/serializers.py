@@ -171,7 +171,7 @@ class MyUserSerializer(UserSerializer, MyUserBaseSerializer):
 
         Друзей можно только удалять.
         """
-        if "interests" in self.initial_data:
+        if "interests" in validated_data:
             interests = validated_data.pop("interests")
             instance.interests.clear()
             for interest in interests:

@@ -4,12 +4,14 @@ import pytest
 
 from users.models import Blacklist
 
+API_URL = "/api/v1"
+
 
 @pytest.mark.django_db(transaction=True)
 class TestBlacklistAPI:
     """Тесты черного списка."""
 
-    objects_url = "/api/v1/users/blacklist/"
+    objects_url = f"{API_URL}/users/blacklist/"
 
     def check_blacklist_info(self, info, another_user, url):
         """Проверка содержания полей в черном списке."""
@@ -64,7 +66,7 @@ class TestBlacklistAPI:
 
     def test_blacklist_create_not_auth(self, client, user):
         """Проверка создания списка неавторизованного пользователя."""
-        url = f"/api/v1/users/{user.id}/block/"
+        url = f"{API_URL}/users/{user.id}/block/"
         data = {}
         response = client.post(url, data=data)
         assert response.status_code == HTTPStatus.UNAUTHORIZED, (
@@ -74,7 +76,7 @@ class TestBlacklistAPI:
 
     def test_blacklist_delete_not_auth(self, client, user):
         """Проверка удаления списка неавторизованного пользователя."""
-        url = f"/api/v1/users/{user.id}/block/"
+        url = f"{API_URL}/users/{user.id}/block/"
         response = client.delete(url)
         assert response.status_code == HTTPStatus.UNAUTHORIZED, (
             "Проверьте, что неавторизованному пользователю при попытке "
@@ -83,7 +85,7 @@ class TestBlacklistAPI:
 
     def test_blacklist_create_auth(self, user_client, another_user):
         """Проверка создания списка авторизованного пользователя."""
-        url = f"/api/v1/users/{another_user.id}/block/"
+        url = f"{API_URL}/users/{another_user.id}/block/"
         data = {}
         response = user_client.post(url, data=data)
         assert response.status_code == HTTPStatus.CREATED, (
@@ -93,7 +95,7 @@ class TestBlacklistAPI:
 
     def test_blacklist_delete_auth(self, user_client, another_user, list_1):
         """Проверка удаления списка авторизованного пользователя."""
-        url = f"/api/v1/users/{another_user.id}/block/"
+        url = f"{API_URL}/users/{another_user.id}/block/"
         response = user_client.delete(url)
         assert response.status_code == HTTPStatus.NO_CONTENT, (
             "Проверьте, что авторизованному пользователю при попытке "
