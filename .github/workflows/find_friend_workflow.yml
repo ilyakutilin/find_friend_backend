@@ -98,6 +98,7 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo REDIS_HOST=${{ secrets.REDIS_HOST }} >> .env
             echo REDIS_PORT=${{ secrets.REDIS_PORT }} >> .env
+            echo DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }} >> .env
             echo EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }} >> .env
             echo EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }} >> .env
             echo EMAIL_HOST=${{ secrets.EMAIL_HOST }} >> .env
