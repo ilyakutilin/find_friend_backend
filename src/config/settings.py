@@ -285,6 +285,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": 'API для приложения "Найди друга"',
     "DESCRIPTION": 'Документация для приложения "Найди друга"',
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+    "SCHEMA_PATH_PREFIX_TRIM": True,
     "COMPONENT_SPLIT_REQUEST": True,
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
