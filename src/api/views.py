@@ -2,14 +2,10 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
-# TODO: drf-yasg: Update imports
-# from djoser.serializers import TokenSerializer
-# from djoser.utils import ActionViewMixin
-# from djoser.views import TokenCreateView, TokenDestroyView, UserViewSet
-# from drf_yasg import openapi
-# from drf_yasg.utils import swagger_auto_schema
-from djoser.views import UserViewSet
+from djoser.serializers import TokenSerializer
+from djoser.utils import ActionViewMixin
+from djoser.views import TokenCreateView, TokenDestroyView, UserViewSet
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -253,51 +249,50 @@ class MyUserViewSet(UserViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
 
-# TODO: drf-yasg: Three classes below - needed or not?
-# class CustomActionViewMixin(ActionViewMixin):
-#     """Миксин для метода post в action во вьюсете.
+class CustomActionViewMixin(ActionViewMixin):
+    """Миксин для метода post в action во вьюсете.
 
-#     Это переопределенный миксин из djoser, он нужен для корректной
-#     генерации документации swagger (yasg).
-#     """
+    Это переопределенный миксин из djoser, он нужен для корректной
+    генерации документации swagger (drf-spectacular).
+    """
 
-#     @swagger_auto_schema(
-#         responses={
-#             200: TokenSerializer,
-#         }
-#     )
-#     def post(self, *args, **kwargs):
-#         """Метод post для action во вьюсете."""
-#         return super().post(*args, **kwargs)
-
-
-# class CustomTokenCreateView(CustomActionViewMixin, TokenCreateView):
-#     """Вьюсет для получения токена аутентификации пользователя.
-
-#     Это переопределенный вьюсет из djoser, он нужен для корректной
-#     генерации документации swagger (yasg).
-#     """
-
-#     pass
+    @extend_schema(
+        responses={
+            200: TokenSerializer,
+        }
+    )
+    def post(self, *args, **kwargs):
+        """Метод post для action во вьюсете."""
+        return super().post(*args, **kwargs)
 
 
-# class CustomTokenDestroyView(TokenDestroyView):
-#     """Вьюсет для удаления токена аутентификации пользователя (логаут).
+class CustomTokenCreateView(CustomActionViewMixin, TokenCreateView):
+    """Вьюсет для получения токена аутентификации пользователя.
 
-#     Это переопределенный вьюсет из djoser, он нужен для корректной
-#     генерации документации swagger (yasg).
-#     """
+    Это переопределенный вьюсет из djoser, он нужен для корректной
+    генерации документации swagger (drf-spectacular).
+    """
 
-#     @swagger_auto_schema(
-#         responses={
-#             204: openapi.Response(
-#                 description="No Content",
-#             ),
-#         },
-#     )
-#     def post(self, *args, **kwargs):
-#         """Метод post."""
-#         return super().post(*args, **kwargs)
+    pass
+
+
+class CustomTokenDestroyView(TokenDestroyView):
+    """Вьюсет для удаления токена аутентификации пользователя (логаут).
+
+    Это переопределенный вьюсет из djoser, он нужен для корректной
+    генерации документации swagger (drf-spectacular).
+    """
+
+    @extend_schema(
+        responses={
+            204: OpenApiResponse(
+                description="No Content",
+            ),
+        },
+    )
+    def post(self, *args, **kwargs):
+        """Метод post."""
+        return super().post(*args, **kwargs)
 
 
 class FriendRequestViewSet(ModelViewSet):
