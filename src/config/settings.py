@@ -284,6 +284,14 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     "TITLE": 'API для приложения "Найди друга"',
     "DESCRIPTION": 'Документация для приложения "Найди друга"',
+    "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
     "SWAGGER_UI_DIST": "SIDECAR",
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "REDOC_DIST": "SIDECAR",
