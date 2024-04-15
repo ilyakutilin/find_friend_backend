@@ -38,7 +38,8 @@ THIRD_PARTY_APPS = (
     "channels",
     "djoser",
     "django_rest_passwordreset",
-    "drf_yasg",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
     "django_filters",
     "admin_auto_filters",
 )
@@ -277,6 +278,15 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": 'API для приложения "Найди друга"',
+    "DESCRIPTION": 'Документация для приложения "Найди друга"',
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
 }
 
 CHANNEL_LAYERS = {
