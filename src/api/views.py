@@ -2,11 +2,14 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.serializers import TokenSerializer
-from djoser.utils import ActionViewMixin
-from djoser.views import TokenCreateView, TokenDestroyView, UserViewSet
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+
+# TODO: drf-yasg: Update imports
+# from djoser.serializers import TokenSerializer
+# from djoser.utils import ActionViewMixin
+# from djoser.views import TokenCreateView, TokenDestroyView, UserViewSet
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
+from djoser.views import UserViewSet
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -84,38 +87,40 @@ class MyUserViewSet(UserViewSet):
             return MyUserCreateSerializer
         return MyUserSerializer
 
-    @swagger_auto_schema(
-        responses={
-            400: openapi.Response(
-                description="Bad Request",
-                examples={
-                    "application/json": {
-                        "first_name": ["Обязательное поле."],
-                        "last_name": ["Обязательное поле."],
-                        "age": ["Обязательное поле."],
-                        "interests": ["Обязательное поле."],
-                        "friends_count": ["Обязательное поле."],
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         400: openapi.Response(
+    #             description="Bad Request",
+    #             examples={
+    #                 "application/json": {
+    #                     "first_name": ["Обязательное поле."],
+    #                     "last_name": ["Обязательное поле."],
+    #                     "age": ["Обязательное поле."],
+    #                     "interests": ["Обязательное поле."],
+    #                     "friends_count": ["Обязательное поле."],
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def create(self, request, *args, **kwargs):
         """Создание пользователя."""
         return super().create(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="Unauthorized",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="Unauthorized",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def list(self, request, *args, **kwargs):
         """Получение списка пользователей."""
         if not request.user.is_staff:
@@ -248,50 +253,51 @@ class MyUserViewSet(UserViewSet):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class CustomActionViewMixin(ActionViewMixin):
-    """Миксин для метода post в action во вьюсете.
+# TODO: drf-yasg: Three classes below - needed or not?
+# class CustomActionViewMixin(ActionViewMixin):
+#     """Миксин для метода post в action во вьюсете.
 
-    Это переопределенный миксин из djoser, он нужен для корректной
-    генерации документации swagger (yasg).
-    """
+#     Это переопределенный миксин из djoser, он нужен для корректной
+#     генерации документации swagger (yasg).
+#     """
 
-    @swagger_auto_schema(
-        responses={
-            200: TokenSerializer,
-        }
-    )
-    def post(self, *args, **kwargs):
-        """Метод post для action во вьюсете."""
-        return super().post(*args, **kwargs)
-
-
-class CustomTokenCreateView(CustomActionViewMixin, TokenCreateView):
-    """Вьюсет для получения токена аутентификации пользователя.
-
-    Это переопределенный вьюсет из djoser, он нужен для корректной
-    генерации документации swagger (yasg).
-    """
-
-    pass
+#     @swagger_auto_schema(
+#         responses={
+#             200: TokenSerializer,
+#         }
+#     )
+#     def post(self, *args, **kwargs):
+#         """Метод post для action во вьюсете."""
+#         return super().post(*args, **kwargs)
 
 
-class CustomTokenDestroyView(TokenDestroyView):
-    """Вьюсет для удаления токена аутентификации пользователя (логаут).
+# class CustomTokenCreateView(CustomActionViewMixin, TokenCreateView):
+#     """Вьюсет для получения токена аутентификации пользователя.
 
-    Это переопределенный вьюсет из djoser, он нужен для корректной
-    генерации документации swagger (yasg).
-    """
+#     Это переопределенный вьюсет из djoser, он нужен для корректной
+#     генерации документации swagger (yasg).
+#     """
 
-    @swagger_auto_schema(
-        responses={
-            204: openapi.Response(
-                description="No Content",
-            ),
-        },
-    )
-    def post(self, *args, **kwargs):
-        """Метод post."""
-        return super().post(*args, **kwargs)
+#     pass
+
+
+# class CustomTokenDestroyView(TokenDestroyView):
+#     """Вьюсет для удаления токена аутентификации пользователя (логаут).
+
+#     Это переопределенный вьюсет из djoser, он нужен для корректной
+#     генерации документации swagger (yasg).
+#     """
+
+#     @swagger_auto_schema(
+#         responses={
+#             204: openapi.Response(
+#                 description="No Content",
+#             ),
+#         },
+#     )
+#     def post(self, *args, **kwargs):
+#         """Метод post."""
+#         return super().post(*args, **kwargs)
 
 
 class FriendRequestViewSet(ModelViewSet):
@@ -346,34 +352,36 @@ class FriendRequestViewSet(ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="UnauthorizedAccess",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="UnauthorizedAccess",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def list(self, request, *args, **kwargs):
         """Получение списка друзей."""
         return super().list(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="Unauthorized",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="Unauthorized",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def create(self, request, *args, **kwargs):
         """Добавление в друзья."""
         return super().create(request, *args, **kwargs)
@@ -400,34 +408,36 @@ class EventViewSet(ModelViewSet):
         IsAdminOrAuthorOrReadOnly,
     ]
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="Unauthorized",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="Unauthorized",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def list(self, request, *args, **kwargs):
         """Получение списка мероприятий."""
         return super().list(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="Unauthorized",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="Unauthorized",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def create(self, request, *args, **kwargs):
         """Создание мероприятия."""
         return super().create(request, *args, **kwargs)
@@ -531,34 +541,36 @@ class ParticipationViewSet(ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="UnauthorizedAccess",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="UnauthorizedAccess",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def list(self, request, *args, **kwargs):
         """Получение списка заявок пользователя."""
         return super().list(request, *args, **kwargs)
 
-    @swagger_auto_schema(
-        responses={
-            401: openapi.Response(
-                description="Unauthorized",
-                examples={
-                    "application/json": {
-                        "detail": "Учетные данные не были предоставлены."
-                    }
-                },
-            ),
-        },
-    )
+    # TODO: drf-yasg: Update decorator
+    # @swagger_auto_schema(
+    #     responses={
+    #         401: openapi.Response(
+    #             description="Unauthorized",
+    #             examples={
+    #                 "application/json": {
+    #                     "detail": "Учетные данные не были предоставлены."
+    #                 }
+    #             },
+    #         ),
+    #     },
+    # )
     def create(self, request, *args, **kwargs):
         """Добавление заявки на участие в мероприятии."""
         return super().create(request, *args, **kwargs)
