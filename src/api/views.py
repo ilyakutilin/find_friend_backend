@@ -257,12 +257,13 @@ class CustomActionViewMixin(ActionViewMixin):
     """
 
     @extend_schema(
+        summary="Вход в систему (создание токена аутентификации)",
         responses={
             200: TokenSerializer,
-        }
+        },
     )
     def post(self, *args, **kwargs):
-        """Метод post для action во вьюсете."""
+        """Вход в систему (создание токена аутентификации)."""
         return super().post(*args, **kwargs)
 
 
@@ -284,6 +285,7 @@ class CustomTokenDestroyView(TokenDestroyView):
     """
 
     @extend_schema(
+        summary="Выход из системы (удаление токена аутентификации)",
         responses={
             204: OpenApiResponse(
                 description="No Content",
@@ -291,7 +293,7 @@ class CustomTokenDestroyView(TokenDestroyView):
         },
     )
     def post(self, *args, **kwargs):
-        """Метод post."""
+        """Выход из системы (удаление токена аутентификации)."""
         return super().post(*args, **kwargs)
 
 
