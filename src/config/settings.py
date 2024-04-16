@@ -286,6 +286,10 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": 'Документация для приложения "Найди друга"',
     "SCHEMA_PATH_PREFIX": r"/api/v[0-9]",
     "SCHEMA_PATH_PREFIX_TRIM": True,
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "config.schema.set_request_server",
+    ],
     "COMPONENT_SPLIT_REQUEST": True,
     "SERVE_INCLUDE_SCHEMA": False,
     "SWAGGER_UI_SETTINGS": {
