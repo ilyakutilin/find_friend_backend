@@ -21,6 +21,10 @@ class TestUserRegisterAPI:
         "email": "validemail@test.ru",
     }
 
+    def _response_error_text_list(self, response):
+        error_list = response.json().get("errors")
+        return [error.get("detail") for error in error_list]
+
     def test_register_correct_data(self, client):
         """Проверка успешной регистрации при вводе корректных данных."""
         response = client.post(self.users_url, self.data)
@@ -72,10 +76,9 @@ class TestUserRegisterAPI:
         data = self.data.copy()
         data["email"] = email
         response = client.post(self.users_url, data)
-        assert error_text == response.json()["email"][0], (
+        assert error_text in self._response_error_text_list(response), (
             f"При регистрации с почтой {email} "
-            f"должен возвращаться текст ошибки `{error_text}`, "
-            f"а вернулся `{response.json()['email'][0]}`."
+            f"должен возвращаться текст ошибки `{error_text}`."
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
@@ -107,10 +110,9 @@ class TestUserRegisterAPI:
         data = self.data.copy()
         data["password"] = password
         response = client.post(self.users_url, data)
-        assert error_text == response.json()["password"][0], (
+        assert error_text in self._response_error_text_list(response), (
             f"При передаче {password} на `{self.users_url}` "
-            f"должен возвращаться текст ошибки `{error_text}`, "
-            f"а вернулся `{response.json()['password'][0]}`."
+            f"должен возвращаться текст ошибки `{error_text}`."
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
@@ -151,10 +153,10 @@ class TestUserRegisterAPI:
         data = self.data.copy()
         data[field] = value
         response = client.post(self.users_url, data)
-        assert error_text == response.json()[field][0], (
+        assert error_text in self._response_error_text_list(response), (
             f"При передаче {value} в качестве значения поля {field} на "
             f"`{self.users_url}` должен возвращаться текст ошибки "
-            f"{error_text}`, а вернулся `{response.json()[field][0]}`."
+            f"{error_text}`."
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
@@ -183,7 +185,9 @@ class TestUserRegisterAPI:
             f"должен возвращаться статус {HTTPStatus.BAD_REQUEST}, а не "
             f"{response.status_code}."
         )
-        assert [msg.FIELD_CANNOT_BE_BLANK_MSG] in response.json().values(), (
+        assert msg.FIELD_CANNOT_BE_BLANK_MSG in self._response_error_text_list(
+            response
+        ), (
             f"При передаче пустых полей на `{self.users_url}` "
             "должен возвращаться текст ошибки "
             f"`{msg.FIELD_CANNOT_BE_BLANK_MSG}`."

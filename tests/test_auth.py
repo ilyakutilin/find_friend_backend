@@ -30,6 +30,10 @@ class TestAuthAPI:
     logout_url = "/api/v1/auth/token/logout/"
     user_profile_url = "/api/v1/users/me/"
 
+    def _response_error_text_list(self, response):
+        error_list = response.json().get("errors")
+        return [error.get("detail") for error in error_list]
+
     def test_auth_correct_data(self, client, user):
         """Проверка успешного входа в систему при вводе корректных данных."""
         response = client.post(
@@ -78,10 +82,9 @@ class TestAuthAPI:
             self.login_url,
             data={"email": email, "password": "rndmpsswd"},
         )
-        assert error_text == response.json()["non_field_errors"][0], (
+        assert error_text in self._response_error_text_list(response), (
             f"При передаче {email} на `{self.login_url}` "
-            f"должен возвращаться текст ошибки `{error_text}`, "
-            f"а вернулся `{response.json()['non_field_errors'][0]}`."
+            f"должен возвращаться текст ошибки `{error_text}`."
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
@@ -107,10 +110,9 @@ class TestAuthAPI:
             self.login_url,
             data={"email": "a@a.ru", "password": password},
         )
-        assert error_text == response.json()["non_field_errors"][0], (
+        assert error_text in self._response_error_text_list(response), (
             f"При передаче {password} на `{self.login_url}` "
-            f"должен возвращаться текст ошибки `{error_text}`, "
-            f"а вернулся `{response.json()['non_field_errors'][0]}`."
+            f"должен возвращаться текст ошибки `{error_text}`."
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
@@ -135,7 +137,9 @@ class TestAuthAPI:
             f"должен возвращаться статус {HTTPStatus.BAD_REQUEST}, а не "
             f"{response.status_code}."
         )
-        assert [msg.FIELD_CANNOT_BE_BLANK_MSG] in response.json().values(), (
+        assert msg.FIELD_CANNOT_BE_BLANK_MSG in self._response_error_text_list(
+            response
+        ), (
             f"При передаче пустых полей на `{self.login_url}` "
             "должен возвращаться текст ошибки "
             f"`{msg.FIELD_CANNOT_BE_BLANK_MSG}`."
@@ -160,7 +164,9 @@ class TestAuthAPI:
             f"должен возвращаться статус {HTTPStatus.BAD_REQUEST}, а не "
             f"{response.status_code}."
         )
-        assert [msg.INVALID_CREDENTIALS_MSG] in response.json().values(), (
+        assert msg.INVALID_CREDENTIALS_MSG in self._response_error_text_list(
+            response
+        ), (
             f"При передаче неверных данных на `{self.login_url}` должен "
             f"возвращаться текст ошибки `{msg.INVALID_CREDENTIALS_MSG}`."
         )

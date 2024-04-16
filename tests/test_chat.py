@@ -18,6 +18,10 @@ class TestChatHTTP:
     view_chat_url = "/api/v1/chats/%d/"
     list_chats_url = "/api/v1/chats/"
 
+    def _response_error_text_list(self, response):
+        error_list = response.json().get("errors")
+        return [error.get("detail") for error in error_list]
+
     def test_friends_can_start_chat(self, user_client, friends):
         """Друзья могут создать чат."""
         response = user_client.post(
@@ -56,10 +60,10 @@ class TestChatHTTP:
         )
 
         error_text = msg.USER_IS_NOT_FRIEND % str(third_user)
-        assert error_text in response.json().values(), (
+        assert error_text in self._response_error_text_list(response), (
             f"При попытке начать чат с пользователем, не состоящим в друзьях "
             "с пользователем, отправлящим запрос, должна возвращаться ошибка "
-            f"`{error_text}`, а не `{response.json()['detail']}`"
+            f"`{error_text}`."
         )
 
     def test_cannot_start_chat_with_nonexistent_user(self, user_client):
@@ -76,10 +80,9 @@ class TestChatHTTP:
         )
 
         error_text = msg.CANNOT_START_CHAT_WITH_NONEXISTENT_USER
-        assert error_text in response.json().values(), (
+        assert error_text in self._response_error_text_list(response), (
             f"При попытке начать чат с несуществующим пользователем "
-            f"должна возвращаться ошибка `{error_text}`, а не "
-            f"`{response.json()['detail']}`"
+            f"должна возвращаться ошибка `{error_text}`."
         )
 
     def test_start_existing_chat(self, chat, user_client):
@@ -118,10 +121,9 @@ class TestChatHTTP:
         )
 
         error_text = msg.USER_NOT_ALLOWED_TO_VIEW_CHAT
-        assert error_text in response.json().values(), (
+        assert error_text in self._response_error_text_list(response), (
             "При попытке просмотра чата пользователем, не являющимся "
-            "его участником, должна возвращаться ошибка "
-            f"`{error_text}`, а не `{response.json()['detail']}`"
+            f"его участником, должна возвращаться ошибка `{error_text}`."
         )
 
     def test_user_can_list_only_their_chats(
