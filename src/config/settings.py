@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = (
     "django_rest_passwordreset",
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    "drf_standardized_errors",
     "django_filters",
     "admin_auto_filters",
 )
@@ -279,6 +280,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {
@@ -301,6 +303,8 @@ SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "REDOC_DIST": "SIDECAR",
 }
+
+DRF_STANDARDIZED_ERRORS = {"ENABLE_IN_DEBUG_FOR_UNHANDLED_EXCEPTIONS": True}
 
 CHANNEL_LAYERS = {
     "default": {
