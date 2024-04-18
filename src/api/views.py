@@ -354,40 +354,6 @@ class EventViewSet(ModelViewSet):
         IsAdminOrAuthorOrReadOnly,
     ]
 
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         401: openapi.Response(
-    #             description="Unauthorized",
-    #             examples={
-    #                 "application/json": {
-    #                     "detail": "Учетные данные не были предоставлены."
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
-    def list(self, request, *args, **kwargs):
-        """Получение списка мероприятий."""
-        return super().list(request, *args, **kwargs)
-
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         401: openapi.Response(
-    #             description="Unauthorized",
-    #             examples={
-    #                 "application/json": {
-    #                     "detail": "Учетные данные не были предоставлены."
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
-    def create(self, request, *args, **kwargs):
-        """Создание мероприятия."""
-        return super().create(request, *args, **kwargs)
-
     @action(detail=True, methods=["get"], permission_classes=[IsAuthenticated])
     def geolocation(self, request, **kwargs):
         """Получение геолокации мероприятия."""

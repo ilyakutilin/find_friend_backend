@@ -47,6 +47,19 @@ class Attr(enum.Enum):
     NON_FIELD_ERRORS = "non_field_errors"
     EMAIL = "email"
     PASSWORD = "password"
+    CITY = "city"
+    NAME = "name"
+    DESCRIPTION = "description"
+    EVENT_TYPE = "event_type"
+    START_DATE = "start_date"
+    MEMBERS_COUNT = "members_count"
+    MIN_AGE = "min_age"
+    MAX_AGE = "max_age"
+    MIN_COUNT_MEMBERS = "min_count_members"
+    MAX_COUNT_MEMBERS = "max_count_members"
+    EVENT_PRICE = "event_price"
+    IMAGE = "image"
+    ADDRESS = "address"
 
 
 class Code(enum.Enum):
@@ -57,6 +70,12 @@ class Code(enum.Enum):
     INVALID_CREDENTIALS = "invalid_credentials"
     USER_NOT_FOUND = "user_not_found"
     USER_NOT_FRIEND = "user_not_friend"
+    INVALID_CHOICE = "invalid_choice"
+    REQUIRED = "required"
+    DOES_NOT_EXIST = "does_not_exist"
+    MAX_DIGITS = "max_digits"
+    MIN_VALUE = "min_value"
+    MAX_LENGTH = "max_length"
 
 
 class ErrorExample(NamedTuple):

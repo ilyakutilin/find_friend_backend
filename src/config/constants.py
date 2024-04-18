@@ -1,7 +1,15 @@
 from django.contrib.auth import password_validation as pv
 from django.core.exceptions import ValidationError
+from django.core.validators import (
+    integer_validator as django_integer_validator,
+)
 from django.db.models.fields import Field as DjangoField
+from django.forms.models import ModelChoiceField as DjangoModelChoiceField
 from djoser.constants import Messages as DjoserMessages
+from rest_framework import fields as drf_fields
+from rest_framework.relations import (
+    PrimaryKeyRelatedField as DRFPrimaryKeyRelatedField,
+)
 
 MIN_LENGTH_EMAIL = 5
 MAX_LENGTH_EMAIL = 254
@@ -67,7 +75,35 @@ class Messages(object):
 
     # Ниже получаем стандартные сообщения валидации Django и других пакетов
     FIELD_CANNOT_BE_BLANK_MSG = DjangoField.default_error_messages["blank"]
+    INVALID_CHOICE_MSG = DjangoModelChoiceField.default_error_messages.get(
+        "invalid_choice"
+    )
     INVALID_CREDENTIALS_MSG = DjoserMessages.INVALID_CREDENTIALS_ERROR
+    FIELD_REQUIRED_MSG = drf_fields.Field.default_error_messages.get(
+        "required"
+    )
+    INVALID_DATETIME_FORMAT_MSG = (
+        drf_fields.DateTimeField.default_error_messages.get("invalid")
+    )
+    PK_DOES_NOT_EXIST_MSG = (
+        DRFPrimaryKeyRelatedField.default_error_messages.get("does_not_exist")
+    )
+    ENTER_CORRECT_INTEGER_MSG = django_integer_validator.message
+    VALID_NUMBER_IS_REQUIRED_MSG = (
+        drf_fields.DecimalField.default_error_messages.get("invalid")
+    )
+    INVALID_FILE_MSG = drf_fields.FileField.default_error_messages.get(
+        "invalid"
+    )
+    MAX_DIGITS_MSG = drf_fields.DecimalField.default_error_messages.get(
+        "max_digits"
+    )
+    MIN_VALUE_MSG = drf_fields.IntegerField.default_error_messages.get(
+        "min_value"
+    )
+    MAX_CHARACTERS_MSG = drf_fields.ModelField.default_error_messages.get(
+        "max_length"
+    )
 
     def _get_standard_message(self, validation_method, value):
         try:
