@@ -3,7 +3,33 @@ from itertools import groupby
 from typing import NamedTuple, Sequence
 
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse
+from drf_standardized_errors.handler import (
+    exception_handler as standardized_errors_handler,
+)
+from drf_standardized_errors.openapi import AutoSchema
 from rest_framework import serializers
+
+
+class CustomAutoSchema(AutoSchema):
+    """Кастомная схема для Swagger с удаленными parse errors."""
+
+    def _should_add_error_response(
+        self, responses: dict, status_code: str
+    ) -> bool:
+        if (
+            status_code == "400"
+            and status_code not in responses
+            and self.view.get_exception_handler()
+            is standardized_errors_handler
+        ):
+            # Исключаем parse errors из процесса принятия решения о включении
+            # ошибок с кодом 400 в документацию
+            return self._should_add_validation_error_response()
+        return super()._should_add_error_response(responses, status_code)
+
+    def _get_http400_serializer(self):
+        # Убираем всю логику, связанную с parse errors
+        return self._get_serializer_for_validation_error_response()
 
 
 def set_request_server(result, generator, request, public):

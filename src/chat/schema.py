@@ -48,7 +48,6 @@ class FixGetChatView(OpenApiViewExtension):
             request=ChatSerializer,
             responses={
                 HTTPStatus.OK: ChatSerializer,
-                HTTPStatus.BAD_REQUEST: None,
             },
         )(self.target_class)
 
@@ -64,6 +63,5 @@ class FixChatsView(OpenApiViewExtension):
             summary=chats.__doc__.rstrip("."),
             responses={
                 HTTPStatus.OK: ChatListSerializer(many=True),
-                HTTPStatus.BAD_REQUEST: None,
             },
         )(self.target_class)
