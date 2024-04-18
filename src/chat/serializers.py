@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from api.serializers import MyUserGetSerializer
@@ -72,6 +73,7 @@ class ChatSerializer(serializers.ModelSerializer):
             "chat_messages",
         )
 
+    @extend_schema_field(serializers.ListField(child=MessageSerializer()))
     def get_limited_chat_messages(self, obj):
         """Получение ограниченного количества сообщений в чате."""
         qs = obj.chat_messages.all()[:MAX_MESSAGES_IN_CHAT]

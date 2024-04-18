@@ -59,7 +59,7 @@ class Messages(object):
     CANNOT_START_CHAT_WITH_NONEXISTENT_USER = (
         "Нельзя начать чат с несуществующим пользователем."
     )
-    CHAT_DOES_NOT_EXIST = "Такого чата не существует."
+    CHAT_DOES_NOT_EXIST = "Страница не найдена."
     USER_NOT_ALLOWED_TO_VIEW_CHAT = "Вы не можете просматривать этот чат."
     USER_IS_NOT_FRIEND = (
         "Чтобы начать чат, вы должны быть в друзьях с пользователем %s."
