@@ -17,6 +17,7 @@ def set_request_server(result, generator, request, public):
 class Attr(enum.Enum):
     """Список атрибутов для Swagger."""
 
+    NULL = None
     NON_FIELD_ERRORS = "non_field_errors"
     EMAIL = "email"
     PASSWORD = "password"
@@ -28,6 +29,8 @@ class Code(enum.Enum):
     INVALID = "invalid"
     BLANK = "blank"
     INVALID_CREDENTIALS = "invalid_credentials"
+    USER_NOT_FOUND = "user_not_found"
+    USER_NOT_FRIEND = "user_not_friend"
 
 
 class ErrorExample(NamedTuple):

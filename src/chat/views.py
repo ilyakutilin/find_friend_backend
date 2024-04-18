@@ -1,7 +1,6 @@
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
-from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,11 +12,6 @@ from config.constants import messages
 from users.models import User
 
 
-@extend_schema(
-    summary="Открытие нового чата",
-    request=ChatSerializer,
-    responses=ChatSerializer,
-)
 @api_view(["POST"])
 def start_chat(request):
     """Открытие нового чата."""

@@ -34,7 +34,8 @@ def check_friendshhip(user, other_user):
         | Q(initiator=other_user, friend=user),
     )
     if not qs.exists():
-        raise exceptions.PermissionDenied(
-            detail=messages.USER_IS_NOT_FRIEND % str(other_user)
+        raise exceptions.ValidationError(
+            detail=messages.USER_IS_NOT_FRIEND % str(other_user),
+            code="user_not_friend",
         )
     return qs.first()
