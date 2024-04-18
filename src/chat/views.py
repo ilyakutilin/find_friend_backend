@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
+from drf_spectacular.utils import extend_schema
 from rest_framework import exceptions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,6 +13,11 @@ from config.constants import messages
 from users.models import User
 
 
+@extend_schema(
+    summary="Открытие нового чата",
+    request=ChatSerializer,
+    responses=ChatSerializer,
+)
 @api_view(["POST"])
 def start_chat(request):
     """Открытие нового чата."""
@@ -20,8 +26,9 @@ def start_chat(request):
     try:
         participant = User.objects.get(email=email)
     except User.DoesNotExist:
-        raise exceptions.NotFound(
-            detail=messages.CANNOT_START_CHAT_WITH_NONEXISTENT_USER
+        raise exceptions.ValidationError(
+            detail=messages.CANNOT_START_CHAT_WITH_NONEXISTENT_USER,
+            code="user_not_found",
         )
 
     # Проверяем, что пользователь, с которым мы начинаем чат, у нас в друзьях

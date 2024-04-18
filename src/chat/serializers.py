@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
 from api.serializers import MyUserGetSerializer
-
-# from users.models import User
 from config.constants import MAX_MESSAGES_IN_CHAT
+from config.constants import messages as msg
 
 from .models import Chat, Message
 
@@ -53,9 +52,12 @@ class ChatListSerializer(serializers.ModelSerializer):
 class ChatSerializer(serializers.ModelSerializer):
     """Сериализатор чата."""
 
+    default_error_messages = {
+        "user_not_found": msg.CANNOT_START_CHAT_WITH_NONEXISTENT_USER
+    }
     initiator = MyUserGetSerializer(read_only=True)
     receiver = MyUserGetSerializer(read_only=True)
-    email = serializers.CharField(write_only=True)
+    email = serializers.EmailField(write_only=True)
     chat_messages = serializers.SerializerMethodField(
         "get_limited_chat_messages"
     )
