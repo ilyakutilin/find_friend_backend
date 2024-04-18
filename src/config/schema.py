@@ -60,6 +60,11 @@ class Attr(enum.Enum):
     EVENT_PRICE = "event_price"
     IMAGE = "image"
     ADDRESS = "address"
+    INTERESTS = "interests"
+    SEX = "sex"
+    FIRST_NAME = "first_name"
+    LAST_NAME = "last_name"
+    BIRTHDAY = "birthday"
 
 
 class Code(enum.Enum):
@@ -76,6 +81,9 @@ class Code(enum.Enum):
     MAX_DIGITS = "max_digits"
     MIN_VALUE = "min_value"
     MAX_LENGTH = "max_length"
+    CANNOT_CREATE_USER = "cannot_create_user"
+    INVALID_USER_FIRST_NAME = "invalid_user_first_name"
+    INVALID_USER_LAST_NAME = "invalid_user_last_name"
 
 
 class ErrorExample(NamedTuple):

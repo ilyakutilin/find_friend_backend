@@ -1,12 +1,125 @@
 from http import HTTPStatus
 
+from djoser.constants import Messages as DjoserMsg
 from djoser.serializers import TokenSerializer
 from drf_spectacular.extensions import OpenApiViewExtension
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from drf_spectacular.utils import (
+    OpenApiResponse,
+    extend_schema,
+    extend_schema_view,
+)
 
 from chat.serializers import ChatSerializer
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
+
+
+class FixMyUserViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для MyUserViewSet."""
+
+    target_class = "api.views.MyUserViewSet"
+
+    def view_replacement(self):
+        """Расширение схемы для MyUserViewSet."""
+        error_examples_list = [
+            ErrorExample(attr, Code.INVALID_CHOICE, msg.INVALID_CHOICE_MSG)
+            for attr in (Attr.CITY, Attr.INTERESTS, Attr.SEX)
+        ]
+        error_examples_create = (
+            [
+                ErrorExample(attr, Code.REQUIRED, msg.FIELD_REQUIRED_MSG)
+                for attr in (
+                    Attr.FIRST_NAME,
+                    Attr.LAST_NAME,
+                    Attr.EMAIL,
+                    Attr.PASSWORD,
+                )
+            ]
+            + [
+                ErrorExample(attr, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG)
+                for attr in (
+                    Attr.FIRST_NAME,
+                    Attr.LAST_NAME,
+                    Attr.EMAIL,
+                    Attr.PASSWORD,
+                )
+            ]
+            + [
+                ErrorExample(Attr.BIRTHDAY, Code.INVALID, detail)
+                for detail in (
+                    msg.INVALID_BIRTHDAY,
+                    msg.INVALID_DATETIME_FORMAT_MSG,
+                )
+            ]
+            + [
+                ErrorExample(
+                    Attr.NON_FIELD_ERRORS,
+                    Code.CANNOT_CREATE_USER,
+                    DjoserMsg.CANNOT_CREATE_USER_ERROR,
+                ),
+                ErrorExample(
+                    Attr.FIRST_NAME,
+                    Code.INVALID_USER_FIRST_NAME,
+                    msg.INVALID_SYMBOLS_MSG,
+                ),
+                ErrorExample(
+                    Attr.LAST_NAME,
+                    Code.INVALID_USER_LAST_NAME,
+                    msg.INVALID_SYMBOLS_MSG,
+                ),
+                ErrorExample(Attr.EMAIL, Code.INVALID, msg.INVALID_EMAIL_MSG),
+            ]
+        )
+
+        @extend_schema_view(
+            list=extend_schema(
+                summary="Список пользователей",
+                responses={
+                    HTTPStatus.BAD_REQUEST: make_response(error_examples_list)
+                },
+            ),
+            create=extend_schema(
+                summary="Создание пользователя",
+                responses={
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_create
+                    )
+                },
+            ),
+            retrieve=extend_schema(
+                summary="Просмотр пользователя",
+            ),
+            update=extend_schema(
+                summary="Обновление пользователя",
+                # responses={
+                #     HTTPStatus.BAD_REQUEST: make_response(
+                #         error_examples_create
+                #     ),
+                # },
+            ),
+            partial_update=extend_schema(
+                summary="Частичное обновление пользователя",
+                responses={
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        [
+                            ee
+                            for ee in error_examples_create
+                            if all(
+                                (
+                                    ee.code != Code.REQUIRED,
+                                    ee.code != Code.BLANK,
+                                )
+                            )
+                        ]
+                    ),
+                },
+            ),
+            destroy=extend_schema(summary="Удаление пользователя"),
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
 
 
 class FixDjoserTokenCreateView(OpenApiViewExtension):
