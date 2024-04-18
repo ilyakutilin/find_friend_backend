@@ -2,10 +2,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.serializers import TokenSerializer
-from djoser.utils import ActionViewMixin
-from djoser.views import TokenCreateView, TokenDestroyView, UserViewSet
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from djoser.views import UserViewSet
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -247,54 +244,6 @@ class MyUserViewSet(UserViewSet):
                     }
                 )
         return Response(data, status=status.HTTP_200_OK)
-
-
-class CustomActionViewMixin(ActionViewMixin):
-    """Миксин для метода post в action во вьюсете.
-
-    Это переопределенный миксин из djoser, он нужен для корректной
-    генерации документации swagger (drf-spectacular).
-    """
-
-    @extend_schema(
-        summary="Вход в систему (создание токена аутентификации)",
-        responses={
-            200: TokenSerializer,
-        },
-    )
-    def post(self, *args, **kwargs):
-        """Вход в систему (создание токена аутентификации)."""
-        return super().post(*args, **kwargs)
-
-
-class CustomTokenCreateView(CustomActionViewMixin, TokenCreateView):
-    """Вьюсет для получения токена аутентификации пользователя.
-
-    Это переопределенный вьюсет из djoser, он нужен для корректной
-    генерации документации swagger (drf-spectacular).
-    """
-
-    pass
-
-
-class CustomTokenDestroyView(TokenDestroyView):
-    """Вьюсет для удаления токена аутентификации пользователя (логаут).
-
-    Это переопределенный вьюсет из djoser, он нужен для корректной
-    генерации документации swagger (drf-spectacular).
-    """
-
-    @extend_schema(
-        summary="Выход из системы (удаление токена аутентификации)",
-        responses={
-            204: OpenApiResponse(
-                description="No Content",
-            ),
-        },
-    )
-    def post(self, *args, **kwargs):
-        """Выход из системы (удаление токена аутентификации)."""
-        return super().post(*args, **kwargs)
 
 
 class FriendRequestViewSet(ModelViewSet):

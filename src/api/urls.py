@@ -1,13 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django_rest_passwordreset.urls import add_reset_password_urls_to_router
 
 from .routers import CustomRouter
 from .views import (
     CityViewSet,
-    CustomTokenCreateView,
-    CustomTokenDestroyView,
     EventViewSet,
     FriendRequestViewSet,
     InterestViewSet,
@@ -32,16 +30,9 @@ router.register(
     r"participation", ParticipationViewSet, basename="participation"
 )
 
-# URL'ы djoser'а, переопределяем для корректной генерации swagger
-djoser_urlpatterns = [
-    re_path(r"^token/login/?$", CustomTokenCreateView.as_view(), name="login"),
-    re_path(
-        r"^token/logout/?$", CustomTokenDestroyView.as_view(), name="logout"
-    ),
-]
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("auth/", include(djoser_urlpatterns)),
+    path("auth/", include("djoser.urls.authtoken")),
     path("chats/", include("chat.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
