@@ -3,8 +3,8 @@ from http import HTTPStatus
 from drf_spectacular.extensions import OpenApiViewExtension
 from drf_spectacular.utils import extend_schema
 
-from chat.serializers import ChatSerializer
-from chat.views import get_chat, start_chat
+from chat.serializers import ChatListSerializer, ChatSerializer
+from chat.views import chats, get_chat, start_chat
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
 
@@ -27,7 +27,7 @@ class FixStartChatView(OpenApiViewExtension):
             ),
         )
         return extend_schema(
-            summary=start_chat.__doc__,
+            summary=start_chat.__doc__.rstrip("."),
             request=ChatSerializer,
             responses={
                 HTTPStatus.OK: ChatSerializer,
@@ -44,10 +44,26 @@ class FixGetChatView(OpenApiViewExtension):
     def view_replacement(self):
         """Расширение схемы для view-функции get_chat."""
         return extend_schema(
-            summary=get_chat.__doc__,
+            summary=get_chat.__doc__.rstrip("."),
             request=ChatSerializer,
             responses={
                 HTTPStatus.OK: ChatSerializer,
+                HTTPStatus.BAD_REQUEST: None,
+            },
+        )(self.target_class)
+
+
+class FixChatsView(OpenApiViewExtension):
+    """Фикс документации OpenAPI для view-функции просмотра списка чатов."""
+
+    target_class = "chat.views.chats"
+
+    def view_replacement(self):
+        """Расширение схемы для view-функции chats."""
+        return extend_schema(
+            summary=chats.__doc__.rstrip("."),
+            responses={
+                HTTPStatus.OK: ChatListSerializer(many=True),
                 HTTPStatus.BAD_REQUEST: None,
             },
         )(self.target_class)

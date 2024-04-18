@@ -38,6 +38,7 @@ class ChatListSerializer(serializers.ModelSerializer):
             "last_message",
         )
 
+    @extend_schema_field(MessageSerializer())
     def get_last_message(self, instance):
         """Получение последнего сообщения в чате."""
         last_message = (
