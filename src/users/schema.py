@@ -9,6 +9,7 @@ from drf_spectacular.utils import (
     extend_schema_view,
 )
 
+from api.views import MyUserViewSet
 from chat.serializers import ChatSerializer
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
@@ -169,6 +170,35 @@ class FixMyUserViewSet(OpenApiViewExtension):
                 },
             ),
             destroy=extend_schema(summary="Удаление пользователя"),
+            me=extend_schema(
+                summary="Операции с текущим пользователем",
+                responses={
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_update
+                    ),
+                },
+            ),
+            block=extend_schema(
+                summary=MyUserViewSet.block.__doc__.rstrip(".")
+            ),
+            my_friends=extend_schema(
+                summary=MyUserViewSet.my_friends.__doc__.rstrip(".")
+            ),
+            my_events=extend_schema(
+                summary=MyUserViewSet.my_events.__doc__.rstrip(".")
+            ),
+            blacklist=extend_schema(
+                summary=MyUserViewSet.blacklist.__doc__.rstrip(".")
+            ),
+            geolocation=extend_schema(
+                summary=MyUserViewSet.geolocation.__doc__.rstrip(".")
+            ),
+            distance=extend_schema(
+                summary=MyUserViewSet.distance.__doc__.rstrip(".")
+            ),
+            distances=extend_schema(
+                summary=MyUserViewSet.distances.__doc__.rstrip(".")
+            ),
         )
         class Fixed(self.target_class):
             pass
