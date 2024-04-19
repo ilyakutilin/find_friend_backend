@@ -20,8 +20,9 @@ def start_chat(request):
     try:
         participant = User.objects.get(email=email)
     except User.DoesNotExist:
-        raise exceptions.NotFound(
-            detail=messages.CANNOT_START_CHAT_WITH_NONEXISTENT_USER
+        raise exceptions.ValidationError(
+            detail=messages.CANNOT_START_CHAT_WITH_NONEXISTENT_USER,
+            code="user_not_found",
         )
 
     # Проверяем, что пользователь, с которым мы начинаем чат, у нас в друзьях

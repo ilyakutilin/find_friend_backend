@@ -162,9 +162,7 @@ docker compose -f docker-compose.dev.yaml up -d --build
 
 Эти функции реализованы в стандартной админ-панели Django.
 
-_*Спецификации API в файле `openapi-schema.yml` в папке `docs`*_
-
-Также документация API доступна по адресам:
+## Документация API
 
 - JSON - `/swagger.json`
 - YAML - `/swagger.yaml`
