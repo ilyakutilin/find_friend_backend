@@ -495,3 +495,47 @@ class FixResetPasswordValidateTokenViewSet(OpenApiViewExtension):
             pass
 
         return Fixed
+
+
+class FixInterestViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для InterestViewSet."""
+
+    target_class = "api.views.InterestViewSet"
+
+    def view_replacement(self):
+        """Расширение схемы для view-класса InterestViewSet."""
+
+        @extend_schema_view(
+            list=extend_schema(
+                summary="Список интересов",
+            ),
+            retrieve=extend_schema(
+                summary="Просмотр конкретного интереса",
+            ),
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
+
+
+class FixCityViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для CityViewSet."""
+
+    target_class = "api.views.CityViewSet"
+
+    def view_replacement(self):
+        """Расширение схемы для view-класса CityViewSet."""
+
+        @extend_schema_view(
+            list=extend_schema(
+                summary="Список городов",
+            ),
+            retrieve=extend_schema(
+                summary="Просмотр конкретного города",
+            ),
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
