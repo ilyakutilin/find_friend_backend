@@ -180,6 +180,7 @@ class FixMyUserViewSet(OpenApiViewExtension):
             ),
             block=extend_schema(
                 summary=MyUserViewSet.block.__doc__.rstrip(".")
+                # TODO: добавить примеры валидации
             ),
             my_friends=extend_schema(
                 summary=MyUserViewSet.my_friends.__doc__.rstrip(".")
@@ -281,5 +282,83 @@ class FixDjoserTokenDestroyView(OpenApiViewExtension):
             def post(self, *args, **kwargs):
                 """Выход из системы (удаление токена аутентификации)."""
                 return super().post(*args, **kwargs)
+
+        return Fixed
+
+
+class FixResetPasswordRequestTokenViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для ResetPasswordRequestTokenViewSet.
+
+    Относится к пакету django_rest_passwordreset.
+    """
+
+    target_class = (
+        "django_rest_passwordreset.views.ResetPasswordRequestTokenViewSet"
+    )
+
+    def view_replacement(self):
+        """Расширение схемы для вьюсета ResetPasswordRequestTokenViewSet."""
+        # error_examples = ()
+
+        @extend_schema_view(
+            create=extend_schema(
+                summary="Запрос кода сброса пароля по e-mail'у",
+                # TODO: добавить примеры валидации
+            )
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
+
+
+class FixResetPasswordConfirmViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для ResetPasswordConfirmViewSet.
+
+    Относится к пакету django_rest_passwordreset.
+    """
+
+    target_class = (
+        "django_rest_passwordreset.views.ResetPasswordConfirmViewSet"
+    )
+
+    def view_replacement(self):
+        """Расширение схемы для вьюсета ResetPasswordConfirmViewSet."""
+        # error_examples = ()
+
+        @extend_schema_view(
+            create=extend_schema(
+                summary="Подтверждение нового пароля полученным кодом",
+                # TODO: добавить примеры валидации
+            )
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
+
+
+class FixResetPasswordValidateTokenViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для ResetPasswordValidateTokenViewSet.
+
+    Относится к пакету django_rest_passwordreset.
+    """
+
+    target_class = (
+        "django_rest_passwordreset.views.ResetPasswordValidateTokenViewSet"
+    )
+
+    def view_replacement(self):
+        """Расширение схемы для вьюсета ResetPasswordValidateTokenViewSet."""
+        # error_examples = ()
+
+        @extend_schema_view(
+            create=extend_schema(
+                summary="Проверка валидности кода подтверждения смены пароля",
+                # TODO: добавить примеры валидации
+            )
+        )
+        class Fixed(self.target_class):
+            pass
 
         return Fixed
