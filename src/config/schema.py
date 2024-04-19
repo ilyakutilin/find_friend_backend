@@ -65,6 +65,15 @@ class Attr(enum.Enum):
     FIRST_NAME = "first_name"
     LAST_NAME = "last_name"
     BIRTHDAY = "birthday"
+    AGE = "age"
+    FRIENDS_COUNT = "friends_count"
+    AVATAR = "avatar"
+    IS_GEOIP_ALLOWED = "is_geoip_allowed"
+    INTERESTS_NON_FIELD_ERRORS = "interests.non_field_errors"
+    INTERESTS_INDEX_NAME = "interests.INDEX.name"
+    INTERESTS_INDEX_NON_FIELD_ERRORS = "interests.INDEX.non_field_errors"
+    PROFESSION = "profession"
+    PURPOSE = "purpose"
 
 
 class Code(enum.Enum):
@@ -84,6 +93,8 @@ class Code(enum.Enum):
     CANNOT_CREATE_USER = "cannot_create_user"
     INVALID_USER_FIRST_NAME = "invalid_user_first_name"
     INVALID_USER_LAST_NAME = "invalid_user_last_name"
+    NOT_A_LIST = "not_a_list"
+    EMPTY = "empty"
 
 
 class ErrorExample(NamedTuple):
