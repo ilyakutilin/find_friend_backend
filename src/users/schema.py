@@ -9,7 +9,7 @@ from drf_spectacular.utils import (
     extend_schema_view,
 )
 
-from api.views import MyUserViewSet, ParticipationViewSet
+from api.views import MyUserViewSet, NotificationViewSet, ParticipationViewSet
 from chat.serializers import ChatSerializer
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
@@ -210,55 +210,6 @@ class FixMyUserViewSet(OpenApiViewExtension):
         return Fixed
 
 
-class FixDjoserTokenCreateView(OpenApiViewExtension):
-    """Фикс документации OpenAPI для djoser TokenCreateView."""
-
-    target_class = "djoser.views.TokenCreateView"
-
-    def view_replacement(self):
-        """Расширение схемы для view-класса TokenCreateView."""
-        error_examples = (
-            ErrorExample(
-                Attr.EMAIL, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG
-            ),
-            ErrorExample(
-                Attr.PASSWORD, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG
-            ),
-            ErrorExample(
-                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.EMAIL_LENGTH_MSG
-            ),
-            ErrorExample(
-                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.EMAIL_ENGLISH_ONLY_MSG
-            ),
-            ErrorExample(
-                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.INVALID_EMAIL_MSG
-            ),
-            ErrorExample(
-                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.PASSWORD_LENGTH_MSG
-            ),
-            ErrorExample(
-                Attr.NON_FIELD_ERRORS,
-                Code.INVALID_CREDENTIALS,
-                msg.INVALID_CREDENTIALS_MSG,
-            ),
-        )
-
-        class Fixed(self.target_class):
-
-            @extend_schema(
-                summary="Вход в систему (создание токена аутентификации)",
-                responses={
-                    HTTPStatus.OK: TokenSerializer,
-                    HTTPStatus.BAD_REQUEST: make_response(error_examples),
-                },
-            )
-            def post(self, *args, **kwargs):
-                """Вход в систему (создание токена аутентификации)."""
-                return super().post(*args, **kwargs)
-
-        return Fixed
-
-
 class FixParticipationViewSet(OpenApiViewExtension):
     """Фикс документации OpenAPI для ParticipationViewSet."""
 
@@ -324,6 +275,119 @@ class FixParticipationViewSet(OpenApiViewExtension):
         )
         class Fixed(self.target_class):
             pass
+
+        return Fixed
+
+
+class FixNotificationViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для NotificationViewSet."""
+
+    target_class = "api.views.NotificationViewSet"
+
+    def view_replacement(self):
+        """Расширение схемы для вьюсета NotificationViewSet."""
+        # error_examples = ()
+
+        # Переменная создана из-за ограничений длины строки
+        nvs = NotificationViewSet.update_notification_settings.__doc__.rstrip(
+            "."
+        )
+
+        @extend_schema_view(
+            list=extend_schema(
+                summary="Список уведомлений пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            create=extend_schema(
+                summary="Создание уведомления пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            retrieve=extend_schema(
+                summary="Получение уведомления пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            update=extend_schema(
+                summary="Обновление уведомления пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            partial_update=extend_schema(
+                summary="Частичное обновление уведомления пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            destroy=extend_schema(
+                summary="Удаление уведомления пользователя",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            update_notification_settings=extend_schema(
+                summary=nvs,
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+        )
+        class Fixed(self.target_class):
+            pass
+
+        return Fixed
+
+
+class FixDjoserTokenCreateView(OpenApiViewExtension):
+    """Фикс документации OpenAPI для djoser TokenCreateView."""
+
+    target_class = "djoser.views.TokenCreateView"
+
+    def view_replacement(self):
+        """Расширение схемы для view-класса TokenCreateView."""
+        error_examples = (
+            ErrorExample(
+                Attr.EMAIL, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG
+            ),
+            ErrorExample(
+                Attr.PASSWORD, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG
+            ),
+            ErrorExample(
+                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.EMAIL_LENGTH_MSG
+            ),
+            ErrorExample(
+                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.EMAIL_ENGLISH_ONLY_MSG
+            ),
+            ErrorExample(
+                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.INVALID_EMAIL_MSG
+            ),
+            ErrorExample(
+                Attr.NON_FIELD_ERRORS, Code.INVALID, msg.PASSWORD_LENGTH_MSG
+            ),
+            ErrorExample(
+                Attr.NON_FIELD_ERRORS,
+                Code.INVALID_CREDENTIALS,
+                msg.INVALID_CREDENTIALS_MSG,
+            ),
+        )
+
+        class Fixed(self.target_class):
+
+            @extend_schema(
+                summary="Вход в систему (создание токена аутентификации)",
+                responses={
+                    HTTPStatus.OK: TokenSerializer,
+                    HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            )
+            def post(self, *args, **kwargs):
+                """Вход в систему (создание токена аутентификации)."""
+                return super().post(*args, **kwargs)
 
         return Fixed
 
