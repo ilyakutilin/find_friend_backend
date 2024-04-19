@@ -419,40 +419,6 @@ class ParticipationViewSet(ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         401: openapi.Response(
-    #             description="UnauthorizedAccess",
-    #             examples={
-    #                 "application/json": {
-    #                     "detail": "Учетные данные не были предоставлены."
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
-    def list(self, request, *args, **kwargs):
-        """Получение списка заявок пользователя."""
-        return super().list(request, *args, **kwargs)
-
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         401: openapi.Response(
-    #             description="Unauthorized",
-    #             examples={
-    #                 "application/json": {
-    #                     "detail": "Учетные данные не были предоставлены."
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
-    def create(self, request, *args, **kwargs):
-        """Добавление заявки на участие в мероприятии."""
-        return super().create(request, *args, **kwargs)
-
 
 class InterestViewSet(ReadOnlyModelViewSet):
     """Отображение интересов."""
