@@ -52,11 +52,11 @@ class TestChatHTTP:
             self.start_chat_url, data={"email": third_user.email}
         )
 
-        assert response.status_code == HTTPStatus.FORBIDDEN, (
+        assert response.status_code == HTTPStatus.BAD_REQUEST, (
             f"Проверьте, что при POST запросе на `{self.start_chat_url}` "
             "при попытке начать чат с пользователем, не состоящим в друзьях "
             "с пользователем, отправлящим запрос, возвращается статус "
-            f"{HTTPStatus.FORBIDDEN}, а не {response.status_code}."
+            f"{HTTPStatus.BAD_REQUEST}, а не {response.status_code}."
         )
 
         error_text = msg.USER_IS_NOT_FRIEND % str(third_user)
@@ -72,10 +72,10 @@ class TestChatHTTP:
             self.start_chat_url, data={"email": "nonexistent@test.ru"}
         )
 
-        assert response.status_code == HTTPStatus.NOT_FOUND, (
+        assert response.status_code == HTTPStatus.BAD_REQUEST, (
             f"Проверьте, что при POST запросе на `{self.start_chat_url}` "
             "при попытке начать чат с несуществующим пользователем "
-            f"возвращается статус {HTTPStatus.NOT_FOUND}, а не "
+            f"возвращается статус {HTTPStatus.BAD_REQUEST}, а не "
             f"{response.status_code}."
         )
 
