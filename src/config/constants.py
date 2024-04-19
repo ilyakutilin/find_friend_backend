@@ -97,6 +97,12 @@ class Messages(object):
             "does_not_exist"
         )
     )
+    # Некорректный тип. Ожидалось значение первичного ключа, получен \"str\".
+    EXPECTED_PK_MSG = (
+        drf_relations.PrimaryKeyRelatedField.default_error_messages.get(
+            "incorrect_type"
+        )
+    )
     # Введите правильное число.
     ENTER_CORRECT_INTEGER_MSG = django_integer_validator.message
     # Требуется численное значение.

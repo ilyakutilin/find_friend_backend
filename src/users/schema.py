@@ -9,8 +9,11 @@ from drf_spectacular.utils import (
     extend_schema_view,
 )
 
+from api.serializers import (
+    NotificationSerializer,
+    NotificationSettingsSerializer,
+)
 from api.views import MyUserViewSet, NotificationViewSet, ParticipationViewSet
-from chat.serializers import ChatSerializer
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
 
@@ -286,7 +289,39 @@ class FixNotificationViewSet(OpenApiViewExtension):
 
     def view_replacement(self):
         """Расширение схемы для вьюсета NotificationViewSet."""
-        # error_examples = ()
+        error_examples_create = [
+            ErrorExample(attr, Code.REQUIRED, msg.FIELD_REQUIRED_MSG)
+            for attr in (Attr.MESSAGE, Attr.RECIPIENT)
+        ] + [
+            ErrorExample(
+                Attr.MESSAGE, Code.BLANK, msg.FIELD_CANNOT_BE_BLANK_MSG
+            ),
+            ErrorExample(
+                Attr.RECIPIENT, Code.NULL, msg.FIELD_CANNOT_BE_BLANK_MSG
+            ),
+        ]
+        error_examples_update = [
+            ErrorExample(
+                Attr.READ, Code.INVALID, msg.MUST_BE_A_VALID_BOOLEAN_MSG
+            ),
+            ErrorExample(
+                Attr.TYPE, Code.INVALID_CHOICE, msg.INVALID_CHOICE_MSG
+            ),
+            ErrorExample(
+                Attr.RECIPIENT, Code.DOES_NOT_EXIST, msg.PK_DOES_NOT_EXIST_MSG
+            ),
+        ]
+        error_examples_settings = [
+            ErrorExample(
+                Attr.RECEIVE_NOTIFICATIONS,
+                Code.INVALID,
+                msg.MUST_BE_A_VALID_BOOLEAN_MSG,
+            ),
+            ErrorExample(Attr.USER, Code.INCORRECT_TYPE, msg.EXPECTED_PK_MSG),
+            ErrorExample(
+                Attr.USER, Code.DOES_NOT_EXIST, msg.PK_DOES_NOT_EXIST_MSG
+            ),
+        ]
 
         # Переменная создана из-за ограничений длины строки
         nvs = NotificationViewSet.update_notification_settings.__doc__.rstrip(
@@ -297,43 +332,58 @@ class FixNotificationViewSet(OpenApiViewExtension):
             list=extend_schema(
                 summary="Список уведомлений пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSerializer(many=True),
                 },
             ),
             create=extend_schema(
                 summary="Создание уведомления пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSerializer,
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_create + error_examples_update
+                    ),
                 },
             ),
             retrieve=extend_schema(
                 summary="Получение уведомления пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSerializer,
                 },
             ),
             update=extend_schema(
                 summary="Обновление уведомления пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSerializer,
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_create + error_examples_update
+                    ),
                 },
             ),
             partial_update=extend_schema(
                 summary="Частичное обновление уведомления пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSerializer,
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_update
+                    ),
                 },
             ),
             destroy=extend_schema(
                 summary="Удаление уведомления пользователя",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.NO_CONTENT: OpenApiResponse(
+                        description="NO CONTENT"
+                    ),
                 },
             ),
             update_notification_settings=extend_schema(
                 summary=nvs,
+                request=NotificationSettingsSerializer,
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: NotificationSettingsSerializer,
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        error_examples_settings
+                    ),
                 },
             ),
         )
@@ -404,7 +454,6 @@ class FixDjoserTokenDestroyView(OpenApiViewExtension):
 
             @extend_schema(
                 summary="Выход из системы (удаление токена аутентификации)",
-                request=ChatSerializer,
                 responses={
                     HTTPStatus.NO_CONTENT: OpenApiResponse(
                         description="No Content",

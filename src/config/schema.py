@@ -74,6 +74,12 @@ class Attr(enum.Enum):
     INTERESTS_INDEX_NON_FIELD_ERRORS = "interests.INDEX.non_field_errors"
     PROFESSION = "profession"
     PURPOSE = "purpose"
+    MESSAGE = "message"
+    RECIPIENT = "recipient"
+    READ = "read"
+    TYPE = "type"
+    RECEIVE_NOTIFICATIONS = "receive_notifications"
+    USER = "user"
 
 
 class Code(enum.Enum):
@@ -81,6 +87,7 @@ class Code(enum.Enum):
 
     INVALID = "invalid"
     BLANK = "blank"
+    NULL = "null"
     INVALID_CREDENTIALS = "invalid_credentials"
     USER_NOT_FOUND = "user_not_found"
     USER_NOT_FRIEND = "user_not_friend"
@@ -95,6 +102,7 @@ class Code(enum.Enum):
     INVALID_USER_LAST_NAME = "invalid_user_last_name"
     NOT_A_LIST = "not_a_list"
     EMPTY = "empty"
+    INCORRECT_TYPE = "incorrect_type"
 
 
 class ErrorExample(NamedTuple):
