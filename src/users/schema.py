@@ -9,7 +9,7 @@ from drf_spectacular.utils import (
     extend_schema_view,
 )
 
-from api.views import MyUserViewSet
+from api.views import MyUserViewSet, ParticipationViewSet
 from chat.serializers import ChatSerializer
 from config.constants import messages as msg
 from config.schema import Attr, Code, ErrorExample, make_response
@@ -255,6 +255,75 @@ class FixDjoserTokenCreateView(OpenApiViewExtension):
             def post(self, *args, **kwargs):
                 """Вход в систему (создание токена аутентификации)."""
                 return super().post(*args, **kwargs)
+
+        return Fixed
+
+
+class FixParticipationViewSet(OpenApiViewExtension):
+    """Фикс документации OpenAPI для ParticipationViewSet."""
+
+    target_class = "api.views.ParticipationViewSet"
+
+    def view_replacement(self):
+        """Расширение схемы для вьюсета ParticipationViewSet."""
+        # error_examples = ()
+
+        @extend_schema_view(
+            list=extend_schema(
+                summary="Список заявок на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            create=extend_schema(
+                summary="Создание заявки на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            retrieve=extend_schema(
+                summary="Получение заявки на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            update=extend_schema(
+                summary="Обновление заявки на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            partial_update=extend_schema(
+                summary="Частичное обновление заявки на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            destroy=extend_schema(
+                summary="Удаление заявки на участие в мероприятии",
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            accept_request=extend_schema(
+                summary=ParticipationViewSet.accept_request.__doc__.rstrip(
+                    "."
+                ),
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+            decline_request=extend_schema(
+                summary=ParticipationViewSet.decline_request.__doc__.rstrip(
+                    "."
+                ),
+                responses={
+                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                },
+            ),
+        )
+        class Fixed(self.target_class):
+            pass
 
         return Fixed
 
