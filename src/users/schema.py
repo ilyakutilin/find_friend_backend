@@ -12,6 +12,7 @@ from drf_spectacular.utils import (
 from api.serializers import (
     NotificationSerializer,
     NotificationSettingsSerializer,
+    ParticipationSerializer,
 )
 from api.views import MyUserViewSet, NotificationViewSet, ParticipationViewSet
 from config.constants import messages as msg
@@ -220,43 +221,57 @@ class FixParticipationViewSet(OpenApiViewExtension):
 
     def view_replacement(self):
         """Расширение схемы для вьюсета ParticipationViewSet."""
-        # error_examples = ()
+        error_example_pk = ErrorExample(
+            Attr.EVENT, Code.DOES_NOT_EXIST, msg.PK_DOES_NOT_EXIST_MSG
+        )
+        error_example_blank = ErrorExample(
+            Attr.EVENT, Code.NULL, msg.FIELD_CANNOT_BE_BLANK_MSG
+        )
 
         @extend_schema_view(
             list=extend_schema(
                 summary="Список заявок на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: ParticipationSerializer(many=True),
                 },
             ),
             create=extend_schema(
                 summary="Создание заявки на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: ParticipationSerializer(),
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        [error_example_pk, error_example_blank]
+                    ),
                 },
             ),
             retrieve=extend_schema(
                 summary="Получение заявки на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: ParticipationSerializer(),
                 },
             ),
             update=extend_schema(
                 summary="Обновление заявки на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: ParticipationSerializer(),
+                    HTTPStatus.BAD_REQUEST: make_response(
+                        [error_example_pk, error_example_blank]
+                    ),
                 },
             ),
             partial_update=extend_schema(
                 summary="Частичное обновление заявки на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.OK: ParticipationSerializer(),
+                    HTTPStatus.BAD_REQUEST: make_response([error_example_pk]),
                 },
             ),
             destroy=extend_schema(
                 summary="Удаление заявки на участие в мероприятии",
                 responses={
-                    # HTTPStatus.BAD_REQUEST: make_response(error_examples),
+                    HTTPStatus.NO_CONTENT: OpenApiResponse(
+                        description="NO CONTENT"
+                    ),
                 },
             ),
             accept_request=extend_schema(

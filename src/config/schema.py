@@ -80,6 +80,7 @@ class Attr(enum.Enum):
     TYPE = "type"
     RECEIVE_NOTIFICATIONS = "receive_notifications"
     USER = "user"
+    EVENT = "event"
 
 
 class Code(enum.Enum):
