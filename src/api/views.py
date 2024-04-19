@@ -80,40 +80,6 @@ class MyUserViewSet(UserViewSet):
             return MyUserCreateSerializer
         return MyUserSerializer
 
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         400: openapi.Response(
-    #             description="Bad Request",
-    #             examples={
-    #                 "application/json": {
-    #                     "first_name": ["Обязательное поле."],
-    #                     "last_name": ["Обязательное поле."],
-    #                     "age": ["Обязательное поле."],
-    #                     "interests": ["Обязательное поле."],
-    #                     "friends_count": ["Обязательное поле."],
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
-    def create(self, request, *args, **kwargs):
-        """Создание пользователя."""
-        return super().create(request, *args, **kwargs)
-
-    # TODO: drf-yasg: Update decorator
-    # @swagger_auto_schema(
-    #     responses={
-    #         401: openapi.Response(
-    #             description="Unauthorized",
-    #             examples={
-    #                 "application/json": {
-    #                     "detail": "Учетные данные не были предоставлены."
-    #                 }
-    #             },
-    #         ),
-    #     },
-    # )
     def list(self, request, *args, **kwargs):
         """Получение списка пользователей."""
         if not request.user.is_staff:
