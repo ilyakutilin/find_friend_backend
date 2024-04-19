@@ -199,6 +199,9 @@ class FixMyUserViewSet(OpenApiViewExtension):
             distances=extend_schema(
                 summary=MyUserViewSet.distances.__doc__.rstrip(".")
             ),
+            set_password=extend_schema(
+                summary="Установка пароля пользователя"
+            ),
         )
         class Fixed(self.target_class):
             pass
