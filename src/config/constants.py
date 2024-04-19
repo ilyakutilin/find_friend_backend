@@ -74,33 +74,47 @@ class Messages(object):
     )
 
     # Ниже получаем стандартные сообщения валидации Django и других пакетов
+
+    # Это поле не может быть пустым.
     FIELD_CANNOT_BE_BLANK_MSG = DjangoField.default_error_messages["blank"]
+    # Выберите корректный вариант.
+    # Вашего варианта нет среди допустимых значений.
     INVALID_CHOICE_MSG = DjangoModelChoiceField.default_error_messages.get(
         "invalid_choice"
     )
+    # Невозможно войти с предоставленными учетными данными.
     INVALID_CREDENTIALS_MSG = DjoserMessages.INVALID_CREDENTIALS_ERROR
+    # Обязательное поле.
     FIELD_REQUIRED_MSG = drf_fields.Field.default_error_messages.get(
         "required"
     )
+    # Неправильный формат datetime. Используйте один из этих форматов: {fmts}.
     INVALID_DATETIME_FORMAT_MSG = (
         drf_fields.DateTimeField.default_error_messages.get("invalid")
     )
+    # Недопустимый первичный ключ \"{pk_value}\" - объект не существует.
     PK_DOES_NOT_EXIST_MSG = (
         DRFPrimaryKeyRelatedField.default_error_messages.get("does_not_exist")
     )
+    # Введите правильное число.
     ENTER_CORRECT_INTEGER_MSG = django_integer_validator.message
+    # Требуется численное значение.
     VALID_NUMBER_IS_REQUIRED_MSG = (
         drf_fields.DecimalField.default_error_messages.get("invalid")
     )
+    # Загруженный файл не является корректным файлом.
     INVALID_FILE_MSG = drf_fields.FileField.default_error_messages.get(
         "invalid"
     )
+    # Убедитесь, что вы ввели не более {max_digits} цифры.
     MAX_DIGITS_MSG = drf_fields.DecimalField.default_error_messages.get(
         "max_digits"
     )
+    # Убедитесь, что значение больше или равно {min_value}.
     MIN_VALUE_MSG = drf_fields.IntegerField.default_error_messages.get(
         "min_value"
     )
+    # Убедитесь, что в этом поле не больше {max_length} символов.
     MAX_CHARACTERS_MSG = drf_fields.ModelField.default_error_messages.get(
         "max_length"
     )
