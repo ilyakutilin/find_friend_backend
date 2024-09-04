@@ -110,7 +110,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /opt/findfriend/build/infra/prod/
-            docker compose config --quiet && exit 1
             docker compose up -d --build --force-recreate
             docker compose exec wsgiserver python manage.py migrate
             docker compose exec wsgiserver python manage.py collectstatic --no-input
